@@ -23,14 +23,18 @@ class BoxImpl<E> extends BoxBaseImpl<E> implements Box<E> {
 
   @override
   Iterable<E> get values {
-    checkOpen();
+    if (!isOpen) {
+      return [];
+    }
 
     return keystore.getValues();
   }
 
   @override
   Iterable<E> valuesBetween({dynamic startKey, dynamic endKey}) {
-    checkOpen();
+    if (!isOpen) {
+      return [];
+    }
 
     return keystore.getValuesBetween(startKey, endKey);
   }
@@ -54,7 +58,9 @@ class BoxImpl<E> extends BoxBaseImpl<E> implements Box<E> {
 
   @override
   E? getAt(int index) {
-    checkOpen();
+    if (!isOpen) {
+      return null;
+    }
 
     return keystore.getAt(index)?.value as E?;
   }
@@ -82,9 +88,7 @@ class BoxImpl<E> extends BoxBaseImpl<E> implements Box<E> {
   }
 
   Future<void> _writeFrames(List<Frame> frames) async {
-    checkOpen();
-
-    if (!keystore.beginTransaction(frames)) return;
+    if (!isOpen || !keystore.beginTransaction(frames)) return;
 
     try {
       await backend.writeFrames(frames);

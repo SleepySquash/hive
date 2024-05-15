@@ -24,7 +24,9 @@ class LazyBoxImpl<E> extends BoxBaseImpl<E> implements LazyBox<E> {
 
   @override
   Future<E?> get(dynamic key, {E? defaultValue}) async {
-    checkOpen();
+    if (!isOpen) {
+      return null;
+    }
 
     var frame = keystore.get(key);
 
@@ -49,7 +51,9 @@ class LazyBoxImpl<E> extends BoxBaseImpl<E> implements LazyBox<E> {
 
   @override
   Future<void> putAll(Map<dynamic, dynamic> kvPairs) async {
-    checkOpen();
+    if (!isOpen) {
+      return;
+    }
 
     var frames = <Frame>[];
     for (var key in kvPairs.keys) {
@@ -74,7 +78,9 @@ class LazyBoxImpl<E> extends BoxBaseImpl<E> implements LazyBox<E> {
 
   @override
   Future<void> deleteAll(Iterable<dynamic> keys) async {
-    checkOpen();
+    if (!isOpen) {
+      return;
+    }
 
     var frames = <Frame>[];
     for (var key in keys) {

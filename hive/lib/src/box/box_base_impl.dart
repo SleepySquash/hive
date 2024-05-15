@@ -53,13 +53,19 @@ abstract class BoxBaseImpl<E> implements BoxBase<E> {
 
   @override
   Iterable<dynamic> get keys {
-    checkOpen();
+    if (!isOpen) {
+      return [];
+    }
+
     return keystore.getKeys();
   }
 
   @override
   int get length {
-    checkOpen();
+    if (!isOpen) {
+      return 0;
+    }
+
     return keystore.length;
   }
 
@@ -88,7 +94,10 @@ abstract class BoxBaseImpl<E> implements BoxBase<E> {
 
   @override
   dynamic keyAt(int index) {
-    checkOpen();
+    if (!isOpen) {
+      return null;
+    }
+
     return keystore.getAt(index)!.key;
   }
 
@@ -99,7 +108,10 @@ abstract class BoxBaseImpl<E> implements BoxBase<E> {
 
   @override
   bool containsKey(dynamic key) {
-    checkOpen();
+    if (!isOpen) {
+      return false;
+    }
+
     return keystore.containsKey(key);
   }
 
@@ -138,7 +150,9 @@ abstract class BoxBaseImpl<E> implements BoxBase<E> {
 
   @override
   Future<int> clear() async {
-    checkOpen();
+    if (!isOpen) {
+      return 0;
+    }
 
     await backend.clear();
     return keystore.clear();
@@ -146,7 +160,9 @@ abstract class BoxBaseImpl<E> implements BoxBase<E> {
 
   @override
   Future<void> compact() async {
-    checkOpen();
+    if (!isOpen) {
+      return;
+    }
 
     if (!backend.supportsCompaction) return;
     if (keystore.deletedEntries == 0) return;
