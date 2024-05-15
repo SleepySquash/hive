@@ -79,7 +79,10 @@ abstract class BoxBaseImpl<E> implements BoxBase<E> {
 
   @override
   Stream<BoxEvent> watch({dynamic key}) {
-    checkOpen();
+    if (!_open) {
+      return const Stream.empty();
+    }
+
     return keystore.watch(key: key);
   }
 
