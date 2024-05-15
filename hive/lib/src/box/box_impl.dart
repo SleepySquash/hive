@@ -37,7 +37,9 @@ class BoxImpl<E> extends BoxBaseImpl<E> implements Box<E> {
 
   @override
   E? get(dynamic key, {E? defaultValue}) {
-    checkOpen();
+    if (!isOpen) {
+      return null;
+    }
 
     var frame = keystore.get(key);
     if (frame != null) {
